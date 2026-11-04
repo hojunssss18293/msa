@@ -3,14 +3,12 @@ package se.magnus.microservices.composite.product.services;
 import static org.springframework.http.HttpMethod.GET;
 
 import tools.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -67,18 +65,19 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     } catch (HttpClientErrorException ex) {
 
-      switch (HttpStatus.resolve(ex.getStatusCode().value())) {
-        case NOT_FOUND:
-          throw new NotFoundException(getErrorMessage(ex));
+      int status = ex.getStatusCode().value();
 
-        case UNPROCESSABLE_ENTITY:
-          throw new InvalidInputException(getErrorMessage(ex));
-
-        default:
-          LOG.warn("Got an unexpected HTTP error: {}, will rethrow it", ex.getStatusCode());
-          LOG.warn("Error body: {}", ex.getResponseBodyAsString());
-          throw ex;
+      if (status == 404) {
+        throw new NotFoundException(getErrorMessage(ex));
       }
+
+      if (status == 422) {
+        throw new InvalidInputException(getErrorMessage(ex));
+      }
+
+      LOG.warn("Got an unexpected HTTP error: {}, will rethrow it", ex.getStatusCode());
+      LOG.warn("Error body: {}", ex.getResponseBodyAsString());
+      throw ex;
     }
   }
 

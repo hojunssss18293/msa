@@ -21,6 +21,7 @@ ext {
 }
 
 dependencies {
+    implementation 'org.springdoc:springdoc-openapi-starter-common:3.0.3'
     implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-webflux'
