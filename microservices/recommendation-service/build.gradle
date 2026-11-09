@@ -38,6 +38,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
 	testImplementation 'org.testcontainers:testcontainers-mongodb'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

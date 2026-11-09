@@ -1,3 +1,6 @@
+server.error.include-message: always
+spring.web.error.include-message: always
+spring.data.mongodb.auto-index-creation: true
 
 
 server.port: 7002

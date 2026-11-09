@@ -3,12 +3,14 @@ package se.magnus.api.composite.product;
 import java.util.List;
 
 public class ProductAggregate {
-  private final int productId;
-  private final String name;
-  private final int weight;
-  private final List<RecommendationSummary> recommendations;
-  private final List<ReviewSummary> reviews;
-  private final ServiceAddresses serviceAddresses;
+  private int productId;
+  private String name;
+  private int weight;
+  private List<RecommendationSummary> recommendations;
+  private List<ReviewSummary> reviews;
+  private ServiceAddresses serviceAddresses;
+
+  public ProductAggregate() {}
 
   public ProductAggregate(
     int productId,
@@ -26,27 +28,16 @@ public class ProductAggregate {
     this.serviceAddresses = serviceAddresses;
   }
 
-  public int getProductId() {
-    return productId;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public int getWeight() {
-    return weight;
-  }
-
-  public List<RecommendationSummary> getRecommendations() {
-    return recommendations;
-  }
-
-  public List<ReviewSummary> getReviews() {
-    return reviews;
-  }
-
-  public ServiceAddresses getServiceAddresses() {
-    return serviceAddresses;
-  }
+  public int getProductId() { return productId; }
+  public void setProductId(int productId) { this.productId = productId; }
+  public String getName() { return name; }
+  public void setName(String name) { this.name = name; }
+  public int getWeight() { return weight; }
+  public void setWeight(int weight) { this.weight = weight; }
+  public List<RecommendationSummary> getRecommendations() { return recommendations; }
+  public void setRecommendations(List<RecommendationSummary> recommendations) { this.recommendations = recommendations; }
+  public List<ReviewSummary> getReviews() { return reviews; }
+  public void setReviews(List<ReviewSummary> reviews) { this.reviews = reviews; }
+  public ServiceAddresses getServiceAddresses() { return serviceAddresses; }
+  public void setServiceAddresses(ServiceAddresses serviceAddresses) { this.serviceAddresses = serviceAddresses; }
 }
