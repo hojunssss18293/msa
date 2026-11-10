@@ -1,3 +1,5 @@
+spring.web.error.include-message: always
+spring.jpa.hibernate.ddl-auto: update
 server.port: 7004
 server.error.include-message: always
 
