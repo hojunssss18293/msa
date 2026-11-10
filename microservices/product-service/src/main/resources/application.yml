@@ -1,15 +1,22 @@
-server.error.include-message: always
+server.port: 7002
 spring.web.error.include-message: always
+server.error.include-message: always
 spring.data.mongodb.auto-index-creation: true
 
-
-server.port: 7002
+spring.mongodb:
+  host: localhost
+  port: 27017
+  database: product-db
 
 logging:
   level:
     root: INFO
-    se.magnus.microservices: DEBUG
+    se.magnus: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
 ---
 spring.config.activate.on-profile: docker
 
 server.port: 8080
+
+spring.mongodb.host: mongodb
