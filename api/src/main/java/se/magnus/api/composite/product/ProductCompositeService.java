@@ -1,5 +1,6 @@
 package se.magnus.api.composite.product;
 
+import reactor.core.publisher.Mono;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,7 +24,7 @@ public interface ProductCompositeService {
   @PostMapping(
     value = "/product-composite",
     consumes = "application/json")
-  void createProduct(@RequestBody ProductAggregate body);
+  Mono<Void> createProduct(@RequestBody ProductAggregate body);
 
   @Operation(
     summary = "${api.product-composite.get-composite-product.description}",
@@ -37,7 +38,7 @@ public interface ProductCompositeService {
   @GetMapping(
     value = "/product-composite/{productId}",
     produces = "application/json")
-  ProductAggregate getProduct(@PathVariable("productId") int productId);
+  Mono<ProductAggregate> getProduct(@PathVariable("productId") int productId);
 
   @Operation(
     summary = "${api.product-composite.delete-composite-product.description}",
@@ -47,5 +48,5 @@ public interface ProductCompositeService {
     @ApiResponse(responseCode = "422", description = "${api.responseCodes.unprocessableEntity.description}")
   })
   @DeleteMapping(value = "/product-composite/{productId}")
-  void deleteProduct(@PathVariable("productId") int productId);
+  Mono<Void> deleteProduct(@PathVariable("productId") int productId);
 }

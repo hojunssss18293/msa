@@ -1,5 +1,7 @@
 package se.magnus.microservices.composite.product.services;
 
+import static java.util.logging.Level.FINE;
+import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -59,16 +61,22 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
   }
 
   @Override
-  public ProductAggregate getProduct(int productId) {
-    Product product = integration.getProduct(productId);
-    if (product == null) {
-      throw new NotFoundException("No product found for productId: " + productId);
-    }
+  public Mono<ProductAggregate> getProduct(int productId) {
+    return Mono.zip(
+      values -> createProductAggregate(
+        (Product) values[0],
+        (List<Recommendation>) values[1],
+        (List<Review>) values[2],
+        serviceUtil.getServiceAddress()),
 
-    List<Recommendation> recommendations = integration.getRecommendations(productId);
-    List<Review> reviews = integration.getReviews(productId);
+      integration.getProduct(productId),
+      integration.getRecommendations(productId).collectList(),
+      integration.getReviews(productId).collectList())
 
-    return createProductAggregate(product, recommendations, reviews, serviceUtil.getServiceAddress());
+      .doOnError(ex ->
+        LOG.warn("getCompositeProduct failed: {}",
+          ex.toString()))
+      .log(LOG.getName(), FINE);
   }
 
   @Override

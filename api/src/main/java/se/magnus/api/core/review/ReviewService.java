@@ -1,5 +1,6 @@
 package se.magnus.api.core.review;
 
+import reactor.core.publisher.Flux;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public interface ReviewService {
   @GetMapping(
     value = "/review",
     produces = "application/json")
-  List<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
+  Flux<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
 
   /**
    * Sample usage: "curl -X DELETE $HOST:$PORT/review?productId=1".

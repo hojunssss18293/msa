@@ -1,5 +1,11 @@
 package se.magnus.microservices.composite.product.services;
 
+import static reactor.core.publisher.Flux.empty;
+import static java.util.logging.Level.FINE;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClient;
 import static org.springframework.http.HttpMethod.GET;
 
 import java.util.ArrayList;
@@ -27,7 +33,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductCompositeIntegration.class);
 
-  private final RestTemplate restTemplate;
+  private final WebClient webClient;
   private final ObjectMapper mapper;
 
   private final String productServiceUrl;
@@ -35,7 +41,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
   private final String reviewServiceUrl;
 
   public ProductCompositeIntegration(
-    RestTemplate restTemplate,
+    WebClient.Builder webClient,
     ObjectMapper mapper,
     @Value("${app.product-service.host}") String productServiceHost,
     @Value("${app.product-service.port}") int productServicePort,
@@ -44,7 +50,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Value("${app.review-service.host}") String reviewServiceHost,
     @Value("${app.review-service.port}") int reviewServicePort) {
 
-    this.restTemplate = restTemplate;
+    this.webClient = webClient.build();
     this.mapper = mapper;
 
     productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
@@ -62,16 +68,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
   }
 
   @Override
-  public Product getProduct(int productId) {
-    try {
-      String url = productServiceUrl + "/" + productId;
-      LOG.debug("Will call getProduct API on URL: {}", url);
-      Product product = restTemplate.getForObject(url, Product.class);
-      LOG.debug("Found a product with id: {}", product.getProductId());
-      return product;
-    } catch (HttpClientErrorException ex) {
-      throw handleHttpClientException(ex);
-    }
+  public Mono<Product> getProduct(int productId) {
+    String url = productServiceUrl + "/product/" + productId;
+    return webClient.get().uri(url).retrieve()
+      .bodyToMono(Product.class)
+      .log(LOG.getName(), FINE)
+      .onErrorMap(WebClientResponseException.class,
+        ex -> handleException(ex)
+      );
   }
 
   @Override
@@ -93,19 +97,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
   }
 
   @Override
-  public List<Recommendation> getRecommendations(int productId) {
-    try {
-      String url = recommendationServiceUrl + "?productId=" + productId;
-      LOG.debug("Will call getRecommendations API on URL: {}", url);
-      List<Recommendation> recommendations = restTemplate
-        .exchange(url, GET, null, new ParameterizedTypeReference<List<Recommendation>>() {})
-        .getBody();
-      LOG.debug("Found {} recommendations for a product with id: {}", recommendations.size(), productId);
-      return recommendations;
-    } catch (Exception ex) {
-      LOG.warn("Got an exception while requesting recommendations, return zero recommendations: {}", ex.getMessage());
-      return new ArrayList<>();
-    }
+  public Flux<Recommendation> getRecommendations(int productId) {
+    String url = recommendationServiceUrl + "/recommendation?productId=" + productId;
+
+    // 문제가 발생하면 빈 결과를 반환해서 복합 서비스가 부분 응답을 반환할 수 있게 한다.
+    return webClient.get().uri(url).retrieve()
+      .bodyToFlux(Recommendation.class)
+      .log(LOG.getName(), FINE)
+      .onErrorResume(error -> empty());
   }
 
   @Override

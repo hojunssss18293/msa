@@ -44,7 +44,7 @@ class PersistenceTests extends MongoDbTestBase {
     ProductEntity newEntity = new ProductEntity(2, "n", 2);
     repository.save(newEntity);
 
-    ProductEntity foundEntity = repository.findById(newEntity.getId()).get();
+    ProductEntity foundEntity = repository.findById(newEntity.getId()).block();
     assertEqualsProduct(newEntity, foundEntity);
 
     assertEquals(2, repository.count());

@@ -1,5 +1,7 @@
 package se.magnus.microservices.composite.product;
 
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -40,11 +42,11 @@ class ProductCompositeServiceApplicationTests {
   void setUp() {
 
     when(compositeIntegration.getProduct(PRODUCT_ID_OK))
-      .thenReturn(new Product(PRODUCT_ID_OK, "name", 1, "mock-address"));
+      .thenReturn(Mono.just(new Product(PRODUCT_ID_OK, "name", 1, "mock-address")));
     when(compositeIntegration.getRecommendations(PRODUCT_ID_OK))
-      .thenReturn(singletonList(new Recommendation(PRODUCT_ID_OK, 1, "author", 1, "content", "mock address")));
+      .thenReturn(Flux.fromIterable(singletonList(new Recommendation(PRODUCT_ID_OK, 1, "author", 1, "content", "mock address"))));
     when(compositeIntegration.getReviews(PRODUCT_ID_OK))
-      .thenReturn(singletonList(new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock address")));
+      .thenReturn(Flux.fromIterable(singletonList(new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock address"))));
 
     when(compositeIntegration.getProduct(PRODUCT_ID_NOT_FOUND))
       .thenThrow(new NotFoundException("NOT FOUND: " + PRODUCT_ID_NOT_FOUND));
