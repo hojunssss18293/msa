@@ -1,6 +1,7 @@
 package se.magnus.microservices.core.product.services;
 
 
+import static java.util.logging.Level.FINE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -31,12 +32,20 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Mono<Product> createProduct(Product body) {
+
+    if (body.getProductId() < 1) {
+      throw new InvalidInputException("Invalid productId: " + body.getProductId());
+    }
+
     ProductEntity entity = mapper.apiToEntity(body);
-    return repository.save(entity)
-      .log()
-      .onErrorMap(DuplicateKeyException.class,
+    Mono<Product> newEntity = repository.save(entity)
+      .log(LOG.getName(), FINE)
+      .onErrorMap(
+        DuplicateKeyException.class,
         ex -> new InvalidInputException("Duplicate key, Product Id: " + body.getProductId()))
-      .map(mapper::entityToApi);
+      .map(e -> mapper.entityToApi(e));
+
+    return newEntity;
   }
 
   @Override
