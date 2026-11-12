@@ -11,10 +11,10 @@ public class Event<K, T> {
     DELETE
   }
 
-  private final Type eventType;
-  private final K key;
-  private final T data;
-  private final ZonedDateTime eventCreatedAt;
+  private Type eventType;
+  private K key;
+  private T data;
+  private ZonedDateTime eventCreatedAt;
 
   public Event() {
     this.eventType = null;
@@ -45,4 +45,8 @@ public class Event<K, T> {
   public ZonedDateTime getEventCreatedAt() {
     return eventCreatedAt;
   }
+  public void setEventType(Type eventType) { this.eventType = eventType; }
+  public void setKey(K key) { this.key = key; }
+  public void setData(T data) { this.data = data; }
+  public void setEventCreatedAt(ZonedDateTime eventCreatedAt) { this.eventCreatedAt = eventCreatedAt; }
 }
