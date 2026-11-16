@@ -1,3 +1,9 @@
+spring.application.name: recommendation
+eureka.instance.leaseExpirationDurationInSeconds: 5
+eureka.instance.leaseRenewalIntervalInSeconds: 5
+eureka.client.registryFetchIntervalSeconds: 5
+eureka.client.initialInstanceInfoReplicationIntervalSeconds: 5
+eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka/
 spring.rabbitmq.password: guest
 spring.rabbitmq.username: guest
 spring.rabbitmq.port: 5672
@@ -36,6 +42,7 @@ logging:
 
 ---
 spring.config.activate.on-profile: docker
+eureka.client.serviceUrl.defaultZone: http://eureka:8761/eureka/
 spring.cloud.stream.kafka.binder.brokers: kafka
 spring.rabbitmq.host: rabbitmq
 

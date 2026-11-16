@@ -36,7 +36,7 @@ import se.magnus.api.event.Event;
 @org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 @SpringBootTest(
   webEnvironment = RANDOM_PORT,
-  properties = {"spring.main.allow-bean-definition-overriding=true"})
+  properties = {"eureka.client.enabled=false", "spring.main.allow-bean-definition-overriding=true"})
 @Import({TestChannelBinderConfiguration.class})
 class MessagingTests {
 
