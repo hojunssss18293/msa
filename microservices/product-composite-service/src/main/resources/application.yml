@@ -1,3 +1,4 @@
+server.forward-headers-strategy: framework
 spring.application.name: product-composite
 eureka.instance.leaseExpirationDurationInSeconds: 5
 eureka.instance.leaseRenewalIntervalInSeconds: 5
@@ -47,7 +48,7 @@ api:
     notFound.description: Not found, the specified id does not exist
     unprocessableEntity.description: Unprocessable entity, input parameters caused the processing to fail. See response message for more information
 
-    product-composite:
+  product-composite:
     create-composite-product:
       description: Creates a composite product
       notes: |
