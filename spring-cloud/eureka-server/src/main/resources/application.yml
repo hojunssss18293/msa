@@ -1,3 +1,5 @@
+app.eureka-password: p
+app.eureka-username: u
 server:
   port: 8761
 
