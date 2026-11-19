@@ -1,5 +1,6 @@
 package se.magnus.api.composite.product;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import reactor.core.publisher.Mono;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "ProductComposite", description = "REST API for composite product information.")
+@SecurityRequirement(name = "security_auth")
 public interface ProductCompositeService {
 
   @Operation(

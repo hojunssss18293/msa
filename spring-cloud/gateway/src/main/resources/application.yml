@@ -1,3 +1,5 @@
+app.auth-server: localhost
+spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
 spring.ssl.bundle.jks.gateway.key.alias: localhost
 spring.ssl.bundle.jks.gateway.keystore.type: PKCS12
 spring.ssl.bundle.jks.gateway.keystore.location: classpath:keystore/edge.p12
@@ -38,6 +40,21 @@ spring.cloud.gateway.server.webflux.routes:
   uri: lb://product-composite
   predicates:
   - Path=/openapi/**
+
+- id: oauth2-server
+  uri: lb://auth-server
+  predicates:
+  - Path=/oauth2/**
+
+- id: oauth2-login
+  uri: lb://auth-server
+  predicates:
+  - Path=/login/**
+
+- id: oauth2-error
+  uri: lb://auth-server
+  predicates:
+  - Path=/error/**
 
 - id: eureka-api
   uri: http://${app.eureka-server}:8761
@@ -94,3 +111,4 @@ logging:
 spring.config.activate.on-profile: docker
 
 app.eureka-server: eureka
+app.auth-server: auth-server
