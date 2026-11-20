@@ -21,7 +21,7 @@ import se.magnus.api.exceptions.InvalidInputException;
 import se.magnus.microservices.core.review.persistence.ReviewRepository;
 
 @org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
-@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"eureka.client.enabled=false", 
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"eureka.client.enabled=false", "spring.cloud.config.enabled=false", 
   "spring.cloud.stream.defaultBinder=rabbit",
   "logging.level.se.magnus=DEBUG"})
 class ReviewServiceApplicationTests extends MySqlTestBase {

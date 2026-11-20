@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.cloud.config.enabled=false"})
 class EurekaServerApplicationTests {
 
   @Test

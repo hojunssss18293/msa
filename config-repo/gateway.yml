@@ -31,6 +31,12 @@ eureka:
 
 spring.cloud.gateway.server.webflux.routes:
 
+- id: config-server
+  uri: ${spring.cloud.config.uri}
+  predicates:
+    - Path=/config/**
+  filters:
+    - RewritePath=/config/(?<segment>.*), /$\{segment}
 - id: product-composite
   uri: lb://product-composite
   predicates:
